@@ -1,0 +1,89 @@
+version: v1.0.0
+description: ''
+config: {}
+workflows:
+  - name: train
+    type: ''
+    config: {}
+    processes:
+      - name: entrypoint-go
+        type: trigger
+        image: ''
+        replicas: 1
+        gpu: false
+        config: {}
+        objectStore: null
+        secrets: []
+        subscriptions:
+          - postprocess
+        networking:
+          targetPort: 8080
+          destinationPort: 8080
+          protocol: HTTP
+        resourceLimits:
+          CPU:
+            request: 50m
+            limit: ''
+          memory:
+            request: 256Mi
+            limit: 256Mi
+        language: go
+      - name: preprocess
+        type: task
+        image: ''
+        replicas: 1
+        gpu: false
+        config: {}
+        objectStore: null
+        secrets: []
+        subscriptions:
+          - entrypoint-go
+        networking: null
+        resourceLimits:
+          CPU:
+            request: 50m
+            limit: ''
+          memory:
+            request: 256Mi
+            limit: 256Mi
+        language: python
+      - name: inference
+        type: task
+        image: ''
+        replicas: 1
+        gpu: false
+        config: {}
+        objectStore: null
+        secrets: []
+        subscriptions:
+          - preprocess
+        networking: null
+        resourceLimits:
+          CPU:
+            request: 50m
+            limit: ''
+          memory:
+            request: 256Mi
+            limit: 256Mi
+        language: python
+      - name: postprocess
+        type: exit
+        image: ''
+        replicas: 1
+        gpu: false
+        config: {}
+        objectStore: null
+        secrets: []
+        subscriptions:
+          - inference
+          - entrypoint-go
+          - preprocess
+        networking: null
+        resourceLimits:
+          CPU:
+            request: 50m
+            limit: ''
+          memory:
+            request: 256Mi
+            limit: 256Mi
+        language: go

@@ -1,3 +1,10 @@
 Pipfile
 
 .vscode/
+
+.venv
+.python-version
+
+/main.py
+/pyproject.toml
+/uv.lock
